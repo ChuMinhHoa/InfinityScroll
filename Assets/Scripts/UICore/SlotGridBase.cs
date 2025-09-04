@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace UICore
 {
@@ -12,40 +13,43 @@ namespace UICore
 #if UNITY_EDITOR       
         public int column;
 #endif
+        public int groupDataIndex;
         public RectTransform myRectTransform;
         private TData[] _data;
-        public List<TSlot> slots = new();
+        public List<TSlot> groupSlot = new();
         public Padding padding;
         
-        public virtual void InitData(Span<TData> dataChange)
+        public virtual void InitData(Span<TData> dataChange, int dataIndexStart, int groupIndex)
         {
             _data = dataChange.ToArray();
-            for (var i = 0; i < slots.Count; i++)
+            groupDataIndex = groupIndex;
+            for (var i = 0; i < groupSlot.Count; i++)
             {
-                slots[i].InitData(_data[i], i);
+                groupSlot[i].InitData(_data[i], dataIndexStart + i);
             }
         }
         
         public virtual void UpdateData(TData dataChange, int dataIndexChange)
         {
-            for (var i = 0; i < slots.Count; i++)
+            for (var i = 0; i < groupSlot.Count; i++)
             {
-                if (dataIndexChange == slots[i].dataIndex)
+                if (dataIndexChange == groupSlot[i].dataIndex)
                 {
-                    slots[i].InitData(_data[i], i);
+                    groupSlot[i].InitData(_data[i], i);
                 }
+            }
+        }
+        [Button]
+        public void ReSizeSlot()
+        {
+            for (var i = 0; i < groupSlot.Count; i++)
+            {
+                SetRectSize(groupSlot[i].myRectTransform, i);
             }
         }
 
         #if UNITY_EDITOR
-        [Button]
-        private void ReSizeSlot()
-        {
-            for (var i = 0; i < slots.Count; i++)
-            {
-                SetRectSize(slots[i].myRectTransform, i);
-            }
-        }
+        
 
         private void SetRectSize(RectTransform rect, int index)
         {

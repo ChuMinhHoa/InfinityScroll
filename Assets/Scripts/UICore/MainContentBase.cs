@@ -35,16 +35,8 @@ namespace UICore
         [HideLabel]
         public InfinityScrollControllerHorizontal<TSlot,TData> infiniteScrollHorizontalController;
         
-        [ShowIf(nameof(IsGrid))]
-        [BoxGroup("Infinity Scroll Controller")]
-        [InfoBox("Đặt anchor preset vào center cho slot", InfoMessageType.Warning)]
-        [HideLabel]
-        public InfinityScrollControllerGrid<TSlot,TData> infiniteScrollGridController;
-        
         private bool IsVertical() => mainContentType == ScrollMainContentType.InfiniteVertical;
         private bool IsHorizontal() => mainContentType == ScrollMainContentType.InfiniteHorizontal;
-        private bool IsGrid() => mainContentType == ScrollMainContentType.InfiniteGrid;
-        
         public void Start()
         {
             if (IsVertical())
@@ -52,42 +44,41 @@ namespace UICore
             
             if (IsHorizontal())
                 infiniteScrollHorizontalController.Start();
-            
-            if (IsGrid())
-                infiniteScrollGridController.Start();
         }
         
         public virtual void InitData(Span<TData> data)
         {
             _dataArray = data.ToArray();
             totalDataCount = data.Length;
-            for (var i = 0; i < slots.Count && i < data.Length; i++)
-            {
-                slots[i].InitData(data[i], i);
-            }
+            
 
             if (IsVertical())
             {
+                SetDataToSlot(data);
                 infiniteScrollVerticalController.SetActionSwitch(SwitchSlot);
                 infiniteScrollVerticalController.InitData(slots, mainContentType, data.Length);
             }
             
             if (IsHorizontal())
             {
+                SetDataToSlot(data);
                 infiniteScrollHorizontalController.SetActionSwitch(SwitchSlot);
                 infiniteScrollHorizontalController.InitData(slots, mainContentType, data.Length);
             }
-            
-            if (IsGrid())
+        }
+        
+        private void SetDataToSlot(Span<TData> data)
+        {
+            for (var i = 0; i < slots.Count && i < data.Length; i++)
             {
-                infiniteScrollGridController.SetActionSwitch(SwitchSlot);
-                infiniteScrollGridController.InitData(slots, mainContentType, data.Length);
+                slots[i].InitData(data[i], i);
             }
         }
-
         #region infinite scroll
         // Đảo vi trí slot và cập nhật data mới
         // Lấy được data thì mới đảo vị trí slot
+        // Đéo ổn rồi. Nếu mà đổi này data đại khái là phải viết lại ở đây cho cái grid
+        // Giờ sao?
         private void SwitchSlot(bool isUp, Action onComplete)
         {
             var slot = isUp ? slots[^1] : slots[0];
@@ -99,6 +90,8 @@ namespace UICore
             
             onComplete?.Invoke();
         }
+        
+       
         // Lấy data theo index
         // index có thể vượt quá tổng số data hoặc nhỏ hơn 0
         private bool TryGetSlotData(int dataIndex, out TData data)

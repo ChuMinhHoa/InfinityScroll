@@ -7,6 +7,7 @@ public class UITestMainContent : MonoBehaviour
 {
     public int[] testData;
     public MainContentBase<UISlotInfinite, int> mainContent;
+    public MainContentGridBase<SlotGridDemo, int, UISlotInfinite> gridContent;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -18,11 +19,7 @@ public class UITestMainContent : MonoBehaviour
         }
         mainContent.Start();
         mainContent.InitData(testData.AsSpan());
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        //mainContent.Update();
+        gridContent.Start();
+        gridContent.InitData(testData.AsSpan());
     }
 }
