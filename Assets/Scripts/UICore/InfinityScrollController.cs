@@ -118,6 +118,7 @@ namespace UICore
 
         public void SetActionSwitch(Action<bool, Action> updateSlotData) => SwitchAction = updateSlotData;
 
+
         public virtual void Start()
         {
             Padding.left.rValue.ReactiveProperty.Skip(1).Subscribe(v => ChangePadding(PaddingType.Left, v))

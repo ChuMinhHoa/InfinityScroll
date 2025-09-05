@@ -53,6 +53,7 @@ namespace UICore
             }
         }
 
+
         public override void GetWorldCornersViewport(ScrollMainContentType mainContentType)
         {
             base.GetWorldCornersViewport(mainContentType);

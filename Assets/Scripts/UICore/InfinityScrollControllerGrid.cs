@@ -8,6 +8,7 @@ namespace UICore
     public class InfinityScrollControllerGrid<TGridSlot, TData, TSlot>  : InfinityScroll<TGridSlot> where TGridSlot : SlotGridBase<TData, TSlot> where TSlot : SlotBase<TData>
     {
         public int column;
+
         public override void InitContent()
         {
             InitContentVertical();
@@ -16,8 +17,11 @@ namespace UICore
 
         private void InitContentVertical()
         {
-            var contentHeight = Slots[0].myRectTransform.rect.height * DataCount +
-                                Padding.spacing.rValue.Value.y * (DataCount - 1) + Padding.top.rValue.Value + Padding.bottom.rValue.Value;
+            var rowCount = (DataCount / column);
+            if (DataCount % column != 0)
+                rowCount += 1;
+            var contentHeight = Slots[0].myRectTransform.rect.height * rowCount +
+                                Padding.spacing.rValue.Value.y * (rowCount - 1) + Padding.top.rValue.Value + Padding.bottom.rValue.Value;
             ScrollRect.content.sizeDelta = new Vector2(ScrollRect.content.sizeDelta.x, contentHeight);
         }
         
@@ -48,7 +52,8 @@ namespace UICore
         {
             base.GetWorldCornersViewport(mainContentType);
             ViewportWorldCorners[0].y -= (Slots[0].myRectTransform.rect.height + Padding.spacing.rValue.Value.y);
-            ViewportWorldCorners[1].y += (Slots[0].myRectTransform.rect.height + Padding.spacing.rValue.Value.y);
+            //deo hieu sao khong can dong duoi luon :) dang nhe ra no phai co
+            //ViewportWorldCorners[1].y += (Slots[0].myRectTransform.rect.height + Padding.spacing.rValue.Value.y);
         }
         
         public override void OnScrollChanged(Vector2 scrollPosition)

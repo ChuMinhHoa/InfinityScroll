@@ -1,17 +1,31 @@
+using System;
+using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
 
-public class DataIntGlobalConfig : GlobalConfig<DataIntGlobalConfig>
+namespace GlobalConfig
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [GlobalConfig("Assets/Resources/GlobalConfig/DataIntGlobalConfig")]
+    [CreateAssetMenu(fileName = "DataIntGlobalConfig", menuName = "GlobalConfigs/DataIntGlobalConfig")]
+    public class DataIntGlobalConfig : GlobalConfig<DataIntGlobalConfig>
     {
-        
-    }
+        public DataTestConfig[] dataTestConfigs;
 
-    // Update is called once per frame
-    void Update()
+        [Button]
+        private void SetInt()
+        {
+            for (var i = 0; i < dataTestConfigs.Length; i++)
+            {
+                dataTestConfigs[i].dataInt = i;
+                dataTestConfigs[i].color = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
+            }
+        }
+    }
+    
+    [Serializable]
+    public class DataTestConfig
     {
-        
+        public int dataInt;
+        public Color color;
     }
 }

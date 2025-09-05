@@ -46,7 +46,7 @@ namespace UICore
                 Slots[i].myRectTransform.sizeDelta = size;
             }
         }
-        
+
         public override void GetWorldCornersViewport(ScrollMainContentType mainContentType)
         {
             base.GetWorldCornersViewport(mainContentType);
